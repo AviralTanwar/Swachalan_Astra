@@ -5,13 +5,88 @@
 #  1) In a new folder it needs to be created. If the folder doesn't exist, it will be created
 #  2) Each recording needs to be new. WIth name recording_{count}.s_astra. 
 #  3) In the final code, it will be in the folder -> program_files (windows) or in LINUX (wherever application files are)
+#  4)Screen recording will start after the chrome is opened and a countdown will start
 
-
-
-# importing the required packages
+# ----------------------------------------------------------------------------------------------------------------------------------------------
+# IMPORTING PACKAGES       IMPORTING PACKAGES       IMPORTING PACKAGES       IMPORTING PACKAGES       IMPORTING PACKAGES       IMPORTING PACKAGES       
+# ----------------------------------------------------------------------------------------------------------------------------------------------
+ 
 import pyautogui
 import cv2
 import numpy as np
+
+
+from pathlib import Path
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------
+# Functions       Functions       Functions       Functions       Functions       Functions       Functions       Functions       Functions       
+# ----------------------------------------------------------------------------------------------------------------------------------------------
+
+def check_folder():
+    try:
+        # Define the folder path
+        # _______________________________________________________________________________________________________________________
+        # | Make the folder path to Program files and then for other linux and everything according to that and then for MAC    |
+        # _______________________________________________________________________________________________________________________
+        folder_path =Path(r'C:\Users\Aviral Tanwar\Desktop\MAJOR_PROJECT_1\swachal astra recordings')    
+
+        # Define the path for the "requirement.txt" file
+        # _________________________________________________
+        # | Make the txt file have the status as FALSE    |
+        # _________________________________________________
+        status_file = Path("requirements.txt")                                                             
+
+        # Check if the status is already recorded in requirement.txt
+        if status_file.exists():
+            with status_file.open("r") as file:
+                if "swachal_astra_recordings = True" in file.read():
+                    print("Folder check already completed. Skipping...")
+                    return
+
+        # If not recorded, check and create the folder
+        print("Checking if the folder exists, and if not, creating it...")
+        if not folder_path.exists():
+            folder_path.mkdir(parents=True, exist_ok=True)
+            print(f"Folder created at: {folder_path}")
+        else:
+            print(f"Folder already exists at: {folder_path}")
+
+        # Write the status to the "requirement.txt" file
+        with status_file.open("w") as file:
+            file.write("swachal_astra_recordings = True")
+            print(f"Status written to {status_file}")
+
+    except Exception as e:
+        print("Error occurred in the function check_folder: ", e)
+        raise
+
+
+
+def screen_record():
+    try:
+        check_folder()
+        print("Recording started")
+    except Exception as e:
+        print("Error occurred in the function screen_record :- ", e)
+        raise
+
+
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------
+# MAIN_CODE       MAIN_CODE       MAIN_CODE       MAIN_CODE       MAIN_CODE       MAIN_CODE       MAIN_CODE       MAIN_CODE       MAIN_CODE       
+# ----------------------------------------------------------------------------------------------------------------------------------------------
+ 
+def main():
+    print("Iniating main code")
+
+    screen_record()
+    return "Swachalan Astra"
+
+
+if __name__ == "__main__":
+    main()
+    exit()
+
 
 # Specify resolution
 resolution = (1920, 1080)
