@@ -1,1 +1,1 @@
-swachal_astra_recordings = False
+swachal_astra_recordings = True
