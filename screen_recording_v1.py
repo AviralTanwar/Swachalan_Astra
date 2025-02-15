@@ -1,11 +1,18 @@
 # .\astra_venv\Scripts\activate 
 
 # Screen recording using OPENCV (GFG) 
+# What does it do:
+#  1) When this page is called, it will check if the requirements.txt has a variable as False or True
+#  2) If it is false, then there is no folder where the screen recording will be saved and hence will be created.
+#  3) Once checked, it will parse the folder to check the filenames in it.
+#  4) Based on the filenames in the folder it will create the name of this recording file.
+#  5) And at the end, it will save the recording with the name provided in that folder.
+
 # Needs to have following changes:-
-#  1) In a new folder it needs to be created. If the folder doesn't exist, it will be created
-#  2) Each recording needs to be new. WIth name recording_{count}.s_astra. 
-#  3) In the final code, it will be in the folder -> program_files (windows) or in LINUX (wherever application files are)
-#  4)Screen recording will start after the chrome is opened and a countdown will start
+#  1) In the final code, it will be in the folder -> program_files (windows) or in LINUX (wherever application files are)
+#  2) Screen recording will start after the chrome is opened and a countdown will start
+#  3) Check if this code will work for mac and phones or not.
+#  4) Currently, after pressing q on the recorder the recording is stopped. It needs to be changed as written below.
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------
 # IMPORTING PACKAGES       IMPORTING PACKAGES       IMPORTING PACKAGES       IMPORTING PACKAGES       IMPORTING PACKAGES       IMPORTING PACKAGES       
@@ -107,51 +114,74 @@ def file_check(folder_path):
         raise
 
 def screen_record():
+    """
+    Records the screen and saves it as an MP4 file in the specified folder.
+    
+    The function captures the screen at 30 FPS and stores the recording 
+    using OpenCV and PyAutoGUI. It ensures that the recording directory exists 
+    and generates a sequential filename.
+
+    Recording stops when the user presses the 'q' key. 
+    (This can be modified to stop when Chrome is closed or when a quit option is selected.)
+
+    Returns:
+    None: The function saves the video file but does not return any value.
+
+    Raises:
+    Exception: If an error occurs during screen recording.
+    """
     try:
+        # Define the folder where recordings will be saved
+        folder_path = Path(r'C:\Users\Aviral Tanwar\Desktop\MAJOR_PROJECT_1\Swachalan Astra\swachal astra recordings')
 
-        folder_path =Path(r'C:\Users\Aviral Tanwar\Desktop\MAJOR_PROJECT_1\Swachalan Astra\swachal astra recordings')
-
-        check_folder(folder_path)
+        check_folder(folder_path)  # Ensure the folder exists
         
-        resolution = (1920, 1080)                                            # Specify resolution & video codec
-        codec = cv2.VideoWriter_fourcc(*"mp4v")                              # Use H.264 codec for MP4 (works better with modern players)
+        # Specify resolution & video codec
+        resolution = (1920, 1080)
+        codec = cv2.VideoWriter_fourcc(*"mp4v")  # H.264 codec for MP4
 
-        filename = file_check(folder_path)                                   # Get unique filename
+        filename = file_check(folder_path)  # Get unique filename
 
-        fps = 30.0                                                           # Set frame rate & Keeping 30 FPS for better compatibility
-        out = cv2.VideoWriter(filename, codec, fps, resolution)              # Create a VideoWriter object
+        # Set frame rate
+        fps = 30.0
+        out = cv2.VideoWriter(str(filename), codec, fps, resolution)  # Create a VideoWriter object
 
-        cv2.namedWindow("Live", cv2.WINDOW_NORMAL)                           # Create an empty window
+        # Create a window for live preview
+        cv2.namedWindow("Live", cv2.WINDOW_NORMAL)
         cv2.resizeWindow("Live", 480, 270)
 
+        print(f"Recording started. Saving to: {filename}")
+
         while True:
-            
-            img = pyautogui.screenshot()                                     # Take screenshot using PyAutoGUI     
+            # Take a screenshot using PyAutoGUI
+            img = pyautogui.screenshot()
 
-            frame = np.array(img)                                            # Convert the screenshot to a numpy array
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)                   # Convert it from BGR to RGB
+            # Convert the screenshot to a NumPy array
+            frame = np.array(img)
 
-            out.write(frame)                                                 # Write frame to the output file
-            
-            cv2.imshow('Live', frame)                                        # Display the recording screen (optional)
-            
+            # Convert from BGR to RGB
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        # Press q on the video recorder to stop the recording.
-        # __________________________________________________________
-        # | Change it to when chrome is closed or                   |
-        # | something like this or when the quit option is choosen  |
-        # __________________________________________________________            
-            if cv2.waitKey(1) == ord('q'):                                   # Stop recording when 'q' is pressed
+            # Write the frame to the output file
+            out.write(frame)
+
+            # Display the recording screen (optional)
+            cv2.imshow('Live', frame)
+
+            # Press 'q' to stop recording (Modify this to stop on Chrome close or quit button)
+            if cv2.waitKey(1) == ord('q'):
                 break
 
-        out.release()                                                       # Release resources
+        # Release resources
+        out.release()
         cv2.destroyAllWindows()
 
         print(f"Recording stopped and saved as {filename}")
 
     except Exception as e:
-        print("Error occurred in the function screen_record :- ", e)
+        print("Error occurred in the function screen_record: ", e)
         raise
+
 
 
 
